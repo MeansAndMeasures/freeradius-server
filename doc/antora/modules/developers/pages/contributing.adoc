@@ -4,10 +4,9 @@ Contributions can include code, tests, documentation fixes, issue
 reports, and design proposals. The goal is to make each contribution
 understandable and independently reviewable.
 
-The repository's
-https://github.com/FreeRADIUS/freeradius-server/blob/master/.github/contributing.md[GitHub contribution guide]
-describes submission channels, defect reporting, verification, and
-review expectations.
+The repository's `.github/contributing.md` file describes
+submission channels, defect reporting, verification, and review
+expectations.
 
 == Propose a Change
 
@@ -54,9 +53,8 @@ constraint is cited, a link or concrete explanation makes feedback
 more actionable.
 
 Technical claims and verification should be evaluated on their
-merits, regardless of how the change was drafted. The
-https://github.com/FreeRADIUS/freeradius-server/blob/master/.github/contributing.md[full contributor guidance]
-covers additional expectations.
+merits, regardless of how the change was drafted. The repository's `.github/contributing.md` file covers additional
+expectations.
 
 // Copyright (C) 2026 Network RADIUS SAS.  Licenced under CC-by-NC 4.0.
 // This documentation was developed by Network RADIUS SAS.
