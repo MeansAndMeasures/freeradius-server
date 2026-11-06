@@ -22,9 +22,10 @@ pull-requests ONLY.
 It is not for support requests or questions regarding configuration/operation of the server, they
 belong on the [users mailing list](https://freeradius.org/support/).
 
-Raising support requests or questions as issues will result in them being closed and locked.  If you
-continue to raise these questions as issues you will be banned from the FreeRADIUS project's GitHub
-repositories.
+Configuration and operational support questions filed as issues may be redirected to the
+appropriate mailing list or closed. Repeated deliberately disruptive behavior may be addressed
+under the [Code of Conduct](../CODE_OF_CONDUCT.md); an incorrectly filed question is not, by
+itself, a conduct violation.
 
 Security issues should be reported to security@freeradius.org especially if they can be remotely
 exploited.  This ensures that patches can be developed before the exploit is made public.
@@ -86,6 +87,37 @@ Finally, this file was written to be displayed automatically on the GitHub issue
 Git/GitHub knowledge is assumed.  If you're wondering what a pull-request is, this document may be of
 some use <https://www.freeradius.org/documentation/freeradius-server/4.0.0/developers/github.html>
 
+
+## AI-assisted and automated contributions
+
+Contributors may use coding assistants, code generators, scripts, and other
+automation when preparing changes. The method used to draft a change is not a
+substitute for evaluating the change itself.
+
+All submissions, regardless of how they were created, are reviewed for technical
+correctness, security, compatibility, maintainability, licensing, and relevance
+to the project. Contributors are responsible for understanding the changes they
+submit and for describing how they were verified.
+
+When submitting a pull request:
+
+- Explain what changed and why.
+- Include relevant tests or reproduction steps and their actual results.
+- Identify any tests that were not run or could not be completed.
+- Review generated material for project compatibility, security issues, and
+  licensing concerns before submission.
+- Describe material automated transformations or externally generated sources
+  when that provenance affects review, licensing, or reproducibility. Do not
+  misrepresent the origin or verification of submitted work.
+
+Routine editor assistance does not, by itself, determine whether a contribution
+is acceptable. Unsupported claims about the reliability of an entire category
+of tools are not a substitute for reviewing the submitted change.
+
+A pull request with insufficient evidence may be returned for revision or
+closed. Repeated bad-faith submissions or deliberate misrepresentation are
+conduct matters governed by the [Code of Conduct](../CODE_OF_CONDUCT.md),
+rather than automatic sanctions based solely on the use of AI.
 
 ## Continuous Integration Tests (CIT)
 
