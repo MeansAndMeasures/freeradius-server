@@ -8,7 +8,7 @@ Coding standards apply to function names, the look of the code, and
 coding consistency. Coding methods apply to the daily practices used
 by the programmer to write code.
 
-== Comment your code
+== 1. Comment your code
 
 Document non-obvious decisions, invariants, ownership, and assumptions.
 Useful comments explain why an implementation exists, not merely what
@@ -17,7 +17,7 @@ a straightforward statement does.
 For FreeRADIUS, use doxygen `@`-style comments so you get the benefits
 of the developer documentation site, https://doc.freeradius.org/.
 
-== Give things reasonable names
+== 2. Give things reasonable names
 
 Choose names that describe their purpose in context. Short names can
 be appropriate for limited scopes, but ambiguous names make larger
@@ -35,7 +35,7 @@ struct smurf {
 Prefer names that make behavior understandable without requiring
 readers to reconstruct it from unrelated code.
 
-== Check input parameters in the functions you write
+== 3. Check input parameters in the functions you write
 
 Validate inputs at appropriate boundaries and handle invalid input
 with a useful error where recovery is expected.
@@ -50,13 +50,13 @@ Invalid input should produce an actionable error when feasible,
 rather than silently propagating an invalid state.
 ====
 
-== Write useful error messages
+== 4. Write useful error messages
 
 Include the failed operation and relevant context in error messages,
 while avoiding disclosure of secrets. When diagnostic instrumentation
 proves generally useful, retain it for future debugging.
 
-== Check error conditions from the functions you call
+== 5. Check error conditions from the functions you call
 
 Check return values from called functions and handle errors before
 using outputs that may be invalid.
@@ -72,7 +72,7 @@ fgetc(fp);       /* core dumps! */
 Check `fp` for `NULL` before use and return or record a useful
 error when opening a file fails.
 
-== Handle unexpected failures deliberately
+== 6. Handle unexpected failures deliberately
 
 Check recoverable error conditions and report them through the
 appropriate error-handling path. A crash is evidence to investigate,
@@ -82,7 +82,7 @@ Assertions can make violations of internal invariants visible during
 testing. Use them when termination is appropriate for an impossible
 state, not as a replacement for routine validation or recovery.
 
-== Initialize your variables
+== 7. Initialize your variables
 
 `memset()` (`talloc_zero()`) is your friend. `ptr = NULL` is nice,
 too.
@@ -95,14 +95,14 @@ xref:#_check_input_parameters_in_the_functions_you_write[#3].
 It's also nearly impossible for you to debug any problems, as you
 can't tell the variables with garbage values from the real ones.
 
-== Don't allow buffer over-runs
+== 8. Don't allow buffer over-runs
 
 They're usually accidental, but they cause core dumps. `strcpy()` and
 `strcat()` are ugly. Use them under duress.
 
 `sizeof()` is your friend.
 
-== `const` is your friend
+== 9. `const` is your friend
 
 If you don't mean to modify an input structure to your function,
 declare it `const`. Declare string constants `const`. It can't hurt,
@@ -112,7 +112,7 @@ Use `const` everywhere. Once you throw a few into your code, and have
 it save you from nonsensical bugs, you'll blindly throw in `const`
 everywhere. It's a life-saver.
 
-== Use C compiler warnings
+== 10. Use C compiler warnings
 
 Turn on all of the C compiler warnings possible. You might have to
 turn some off due to broken system header files, though. But the more
@@ -125,7 +125,7 @@ Notice that the C compiler error messages are helpful? You should
 write error messages like this, too. See
 xref:#_write_useful_error_messages[#4].
 
-== Avoid UNIXisms and ASCIIisms and visualisms
+== 11. Avoid UNIXisms and ASCIIisms and visualisms
 
 You don't know under what system someone will try to run your code.
 Don't demand that others use the same OS or character set as you use.
@@ -144,7 +144,7 @@ represent a tab, instead of ASCII 9. Literal tabs are presented to
 readers of your code as arbitrary whitespace, and it's easy to mess
 up.
 
-== Make conditionals explicit
+== 12. Make conditionals explicit
 
 Though it's legal to test `if (foo) {}` if you test against the
 appropriate value (like `NULL` or `'\0'`), your code is prettier and
@@ -153,7 +153,7 @@ continuously to figure out what you're doing (especially if your
 variables aren't well-named). See
 xref:#_give_things_reasonable_names[#2].
 
-== Test your code
+== 13. Test your code
 
 Even Donald Knuth writes buggy code. You'll never find all of the bugs
 in your code. But writing a test program definitely helps.
@@ -162,7 +162,7 @@ This means that you'll have to write your code so that it will be
 easily testable. As a result, it will look better and be easier to
 debug.
 
-== Hints, Tips, and Tricks
+== 14. Hints, Tips, and Tricks
 
 This section lists many of the common `rules` associated with code
 submitted to the project. There are always exceptions, but you must
@@ -179,7 +179,7 @@ xref:coding_standards.adoc[coding standards]. If a change needs an
 intentional exception, explain it in the pull request so reviewers
 can evaluate the reason.
 
-== #ifdefs are ugly
+== 15. #ifdefs are ugly
 
 Code cluttered with `#ifdef` s is difficult to read and maintain.
 Don't do it. Instead, put your `#ifdef` s in a header, and
@@ -213,7 +213,7 @@ Cleaned-up example:
 init_my_stuff(dev);
 ----
 
-== `static inline` is better than a macro
+== 16. `static inline` is better than a macro
 
 Static inline functions are greatly preferred over macros. They
 provide type safety, have no length limitations, no formatting
@@ -227,7 +227,7 @@ string-izing).
 `static inline` is preferred over `$$static __inline__$$`, `extern
 inline`, and `$$extern __inline__$$`.
 
-== Keep the design proportional to the problem
+== 17. Keep the design proportional to the problem
 
 Implement the behavior that is needed and supported by the current
 requirements. Avoid speculative abstractions that make the code
