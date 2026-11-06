@@ -1,8 +1,4 @@
-As this is a standardized file designation stewarded by the Linux Foundation itself [@agentsmd/agents.md](https://github.com/agentsmd/agents.md),  this repo will comply with common standards and accepted use of their namespace. 
-
-# AGENTS.md
-
-## Agent Guide: FreeRADIUS Server
+# FreeRADIUS Server: Agent Guide
 
 ### Purpose and Scope
 
