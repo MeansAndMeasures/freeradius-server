@@ -1,10 +1,8 @@
 = Coding Methods
 
-The following is a short set of guidelines to follow while
-programming. It does not address coding styles, function naming
-methods, or debugging methods. Rather, it describes the processes
-which should go on in the programmer's mind while they are
-programming.
+These guidelines describe practical approaches to writing code that
+can be reviewed, tested, and maintained. They complement the project's
+coding style and naming conventions.
 
 Coding standards apply to function names, the look of the code, and
 coding consistency. Coding methods apply to the daily practices used
@@ -12,19 +10,18 @@ by the programmer to write code.
 
 == Comment your code
 
-If you don't, you'll be forced to debug it six months later, when you
-have no clue as to what it's doing.
-
-If someone _really_ hates you, you'll be forced to debug un-commented
-code that someone else wrote. You don't want to do that.
+Document non-obvious decisions, invariants, ownership, and assumptions.
+Useful comments explain why an implementation exists, not merely what
+a straightforward statement does.
 
 For FreeRADIUS, use doxygen `@`-style comments so you get the benefits
 of the developer documentation site, https://doc.freeradius.org/.
 
 == Give things reasonable names
 
-Variables and functions should have names. Calling them `x`, `xx`, and
-`xxx` makes your life hell. Even `foo` and `i` are problematic.
+Choose names that describe their purpose in context. Short names can
+be appropriate for limited scopes, but ambiguous names make larger
+sections harder to review and maintain.
 
 Avoid smurfs. Don't reuse struct names in field names, i. e.
 
@@ -35,35 +32,34 @@ struct smurf {
 }
 ----
 
-If your code reads as full English sentences, you're doing it right.
+Prefer names that make behavior understandable without requiring
+readers to reconstruct it from unrelated code.
 
 == Check input parameters in the functions you write
 
-Your function _cannot_ do anything right if the user passed in garbage
-and you were too lazy to check for garbage input.
+Validate inputs at appropriate boundaries and handle invalid input
+with a useful error where recovery is expected.
 
-`assert()` (`fr_assert()`) is ugly. Use it.
+Use `assert()` or `fr_assert()` for programmer invariants and states
+that should not occur in correct code; assertions are not substitutes
+for checking untrusted or recoverable input.
 
 [NOTE]
 ====
-GIGO, "Garbage In, Garbage Out," is wrong. If your function gets
-garbage input, it should complain loudly and with great
-descriptiveness.
+Invalid input should produce an actionable error when feasible,
+rather than silently propagating an invalid state.
 ====
 
 == Write useful error messages
 
-"Function failed" is useless as an error message. It makes debugging
-the code impossible without source-level instrumentation.
-
-If you're going to instrument the code at source level for error
-messages, leave the error messages there, so the next sucker won't
-have to do the same work all over again.
+Include the failed operation and relevant context in error messages,
+while avoiding disclosure of secrets. When diagnostic instrumentation
+proves generally useful, retain it for future debugging.
 
 == Check error conditions from the functions you call
 
-Your function _cannot_ do anything right if you called another
-function, and they gave you garbage output.
+Check return values from called functions and handle errors before
+using outputs that may be invalid.
 
 One of the most common mistakes is:
 
@@ -73,20 +69,18 @@ fp = fopen(...);
 fgetc(fp);       /* core dumps! */
 ----
 
-If the programmer had bothered to check for a `NULL` fp (error
-condition), then they could have produced a descriptive error message
-instead of having the program core dump.
+Check `fp` for `NULL` before use and return or record a useful
+error when opening a file fails.
 
-== Core dumps are for weenies
+== Handle unexpected failures deliberately
 
-If your program core dumps accidentally, you're a bad programmer. You
-don't know what your program is doing, or what it's supposed to be
-doing when anything goes wrong.
+Check recoverable error conditions and report them through the
+appropriate error-handling path. A crash is evidence to investigate,
+not a measure of the contributor's competence.
 
-If it hits an `assert()` and calls `abort()`, you're a genius. You've
-thought ahead to what _might_ go wrong, and put in an assertion to
-ensure that it fails in a _known manner_ when something _does_ go
-wrong. (As it usually does,)
+Assertions can make violations of internal invariants visible during
+testing. Use them when termination is appropriate for an impossible
+state, not as a replacement for routine validation or recovery.
 
 == Initialize your variables
 
@@ -136,16 +130,14 @@ xref:#_write_useful_error_messages[#4].
 You don't know under what system someone will try to run your code.
 Don't demand that others use the same OS or character set as you use.
 
-Never assign numbers to pointers. If foo is a `char*`, and you want it
-to be be `NULL`, assign `NULL`, not `0`. The zeroth location is
-perfectly as addressable as any other on plenty of OSes. Not all the
-world runs on Unix (though it should :) ).
+For clarity, use `NULL` when representing a null pointer in C.
+The integer constant `0` is also a valid null pointer constant in C,
+so this is a readability convention rather than a claim about a
+platform's address zero.
 
-Another common mistake is to assume that the zeroth character in the
-character set is the string terminator. Instead of terminating a
-string with `0`, use `'\0'`, which is always right. Similarly,
-`memset()` with the appropriate value: `NULL`, `'\0'`, or `0` for
-pointers, chars, and numbers.
+Use `'\0'` to make a terminating null character explicit in code.
+For `memset()`, the fill argument is an integer byte value; use `0`
+when zeroing memory, and prefer typed initialization when appropriate.
 
 Don't put tabs in string constants, either. Always use `'\t'` to
 represent a tab, instead of ASCII 9. Literal tabs are presented to
@@ -182,9 +174,10 @@ The FreeRADIUS server has a common coding style. Use real tabs to
 indent. There is whitespace in variable assignments (`i = 1`, not
 `i=1`).
 
-When in doubt, format your code to look the same as code already in
-the server. If your code deviates too much from the current style, it
-is likely to be rejected without further review, and without comment.
+When in doubt, follow the conventions of nearby code and the
+xref:coding_standards.adoc[coding standards]. If a change needs an
+intentional exception, explain it in the pull request so reviewers
+can evaluate the reason.
 
 == #ifdefs are ugly
 
@@ -234,14 +227,18 @@ string-izing).
 `static inline` is preferred over `$$static __inline__$$`, `extern
 inline`, and `$$extern __inline__$$`.
 
-== Don't over-design
+== Keep the design proportional to the problem
 
-Don't try to anticipate nebulous future cases which may or may not be
-useful: _Make it as simple as you can, and no simpler._
+Implement the behavior that is needed and supported by the current
+requirements. Avoid speculative abstractions that make the code
+harder to understand without a demonstrated benefit.
 
-Split up functionality as much as possible. If your code needs to do
-two unrelated things, write two functions. Mashing two kinds of work
-into one function makes the server difficult to debug and maintain.
+Separate responsibilities when doing so improves cohesion, testing,
+and maintenance. Excessive decomposition can also obscure the flow of
+a program; use the level of separation that makes the system clearest.
+Apply the same principle to documentation: put information where
+readers need it, avoid unnecessary duplication, and link to a
+canonical explanation when appropriate.
 
 // Copyright (C) 2026 Network RADIUS SAS.  Licenced under CC-by-NC 4.0.
 // This documentation was developed by Network RADIUS SAS.
