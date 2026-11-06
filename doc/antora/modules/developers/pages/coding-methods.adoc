@@ -17,6 +17,7 @@ a straightforward statement does.
 For FreeRADIUS, use doxygen `@`-style comments so you get the benefits
 of the developer documentation site, https://doc.freeradius.org/.
 
+[#_give_things_reasonable_names]
 == 2. Give things reasonable names
 
 Choose names that describe their purpose in context. Short names can
@@ -35,6 +36,7 @@ struct smurf {
 Prefer names that make behavior understandable without requiring
 readers to reconstruct it from unrelated code.
 
+[#_check_input_parameters_in_the_functions_you_write]
 == 3. Check input parameters in the functions you write
 
 Validate inputs at appropriate boundaries and handle invalid input
@@ -50,6 +52,7 @@ Invalid input should produce an actionable error when feasible,
 rather than silently propagating an invalid state.
 ====
 
+[#_write_useful_error_messages]
 == 4. Write useful error messages
 
 Include the failed operation and relevant context in error messages,
@@ -82,6 +85,7 @@ Assertions can make violations of internal invariants visible during
 testing. Use them when termination is appropriate for an impossible
 state, not as a replacement for routine validation or recovery.
 
+[#_initialize_your_variables]
 == 7. Initialize your variables
 
 `memset()` (`talloc_zero()`) is your friend. `ptr = NULL` is nice,
